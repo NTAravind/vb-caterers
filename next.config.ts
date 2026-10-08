@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    qualities: [60, 65, 75],
+  },
   turbopack: {
     rules: {
       "*.css": {

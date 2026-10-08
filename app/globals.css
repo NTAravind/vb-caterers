@@ -1,26 +1,150 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Brand */
+  --olive: #4c4d3b;
+  --olive-deep: #3f4031;
+  --gold-on-olive: #d9bc8b;
+  --hero-line: #c4a57b;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Light theme */
+  --page: #fcf7ee;
+  --card: #fffdf8;
+  --ink: #33352a;
+  --ink-soft: #5c5c4c;
+  --gold: #a8864f;
+  --gold-deep: #8a6a38;
+  --line: #e6d3ae;
+  --shadow: 0 10px 30px rgb(76 77 59 / 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --page: #33352a;
+    --card: #3c3e31;
+    --ink: #efe6d3;
+    --ink-soft: #c9bfa8;
+    --gold: #d9bc8b;
+    --gold-deep: #d9bc8b;
+    --line: #6a654a;
+    --shadow: 0 10px 30px rgb(0 0 0 / 0.28);
   }
 }
 
+@theme inline {
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-olive: var(--olive);
+  --color-olive-deep: var(--olive-deep);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-gold-olive: var(--gold-on-olive);
+  --color-line: var(--line);
+  --font-display: var(--font-cormorant);
+  --font-script: var(--font-great-vibes);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 132px);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Shared helpers ------------------------------------------------------- */
+
+.u-hide {
+  display: none !important;
+}
+
+.u-gold-text {
+  background: linear-gradient(100deg, #b8956a, #ecd3a6 50%, #b8956a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Thin gold inset border used on hero / feature blocks */
+.u-inset-frame {
+  position: relative;
+}
+
+.u-inset-frame::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgb(196 165 123 / 0.75);
+  pointer-events: none;
+}
+
+.u-ornament {
+  display: block;
+  background: url("/ornament.png") center / contain no-repeat;
+  aspect-ratio: 7 / 1;
+  width: min(300px, 70%);
+  margin-inline: auto;
+}
+
+.u-heading {
+  font-family: var(--font-cormorant), Georgia, serif;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+
+.u-snap {
+  scrollbar-width: none;
+}
+
+.u-snap::-webkit-scrollbar {
+  display: none;
+}
+
+/* Menu search filtering ------------------------------------------------ */
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] .u-caret {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

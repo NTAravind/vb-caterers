@@ -104,8 +104,8 @@ the videos folder. Supported types: `jpeg, png, webp, gif, avif, bmp` and
 
 Drive metadata is cached with `use cache` / `cacheLife` (fresh within ~5
 minutes, errors retried every ~30s). The media endpoint only serves file IDs
-that exist in the configured folder, keeps a per-instance rate limit, and
-streams video bytes through without buffering them in server memory.
+that exist in one of the configured folders, keeps a per-instance rate limit,
+and streams video bytes through without buffering them in server memory.
 
 Configuration is read on every request (never cached), so adding or changing
 the environment variables — or fixing folder sharing — takes effect on the next

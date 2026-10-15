@@ -56,7 +56,12 @@ function GalleryHero({ section }: { section: MediaSection }) {
  */
 async function GallerySection({ section }: { section: MediaSection }) {
   const config = getGalleryConfig();
-  if (!config.ok) return <GallerySetup missing={config.missing} />;
+  if (!config.ok) {
+    // Built before the credentials were added: keep the setup notice out of
+    // the static shell so it disappears on the next request, without a rebuild.
+    await io();
+    return <GallerySetup missing={config.missing} />;
+  }
 
   if (!sectionFolderId(config.config, section)) {
     // The other album may well be configured — only this one is not.
@@ -76,7 +81,11 @@ async function GallerySection({ section }: { section: MediaSection }) {
     .filter((item) => item.kind === sectionKind(section))
     .map(toPublicItem);
 
-  if (items.length === 0) return <GalleryEmpty section={section} />;
+  if (items.length === 0) {
+    // Empty today, not necessarily tomorrow — never frozen into the shell.
+    await io();
+    return <GalleryEmpty section={section} />;
+  }
 
   return (
     <>

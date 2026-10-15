@@ -308,8 +308,7 @@ export const brandStory = {
   heading: "Crafted with Quality & Elegance",
   paragraphs: [
     "VB Caterers stands as a symbol of trust, taste, and timeless tradition in Bengaluru's catering scene. Known for delivering rich culinary experiences with a royal touch, we specialise in turning every event into an unforgettable celebration.",
-    "Whether you are planning a lavish wedding, a graceful engagement, a corporate gala, or a festive family function — our expert chefs and event team blend heritage with hospitality to deliver not just food, but lasting impressions.",
-    "From traditional South Indian feasts to North Indian delights, fusion cuisines and global flavours, every menu is served with signature presentation and golden service quality.",
+     
   ],
 };
 

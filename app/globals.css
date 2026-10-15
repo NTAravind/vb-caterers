@@ -8,16 +8,28 @@
   --hero-line: #c4a57b;
 
   /* Light theme */
-  --page: #fcf7ee;
-  --card: #fffdf8;
-  --ink: #33352a;
-  --ink-soft: #5c5c4c;
-  --gold: #a8864f;
-  --gold-deep: #8a6a38;
-  --line: #e6d3ae;
-  --shadow: 0 10px 30px rgb(76 77 59 / 0.1);
+--page: #33352a;
+    --card: #3c3e31;
+    --ink: #efe6d3;
+    --ink-soft: #c9bfa8;
+    --gold: #d9bc8b;
+    --gold-deep: #d9bc8b;
+    --line: #6a654a;
+    --shadow: 0 10px 30px rgb(0 0 0 / 0.28);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #33352a;
+    --card: #3c3e31;
+    --ink: #efe6d3;
+    --ink-soft: #c9bfa8;
+    --gold: #d9bc8b;
+    --gold-deep: #d9bc8b;
+    --line: #6a654a;
+    --shadow: 0 10px 30px rgb(0 0 0 / 0.28);
+  }
+}
 
 @theme inline {
   --color-page: var(--page);

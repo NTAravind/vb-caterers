@@ -3,20 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/site/icons";
 import {
-  brandStory,
   cuisines,
-  gallery,
   heroImage,
-  imageCredits,
   linkStack,
-  occasions,
   site,
   trustChips,
   whatsApp,
   mapsUrl,
-  whyCards,
 } from "@/lib/site";
-import { itemCount, groupCount, resolveCuisineAnchor, sectionCount } from "@/lib/menu";
+import { resolveCuisineAnchor } from "@/lib/menu";
+
 
 export const metadata: Metadata = {
   title: "VB Caterers | Best Catering Service in Bengaluru",
@@ -148,7 +144,7 @@ export default function Home() {
           <h2 id="quick-links" className="sr-only">
             Quick links
           </h2>
-          <ul className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4">
+          <ul className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4 items-stretch">
             {linkStack
               .filter((link) => link.href.length > 0)
               .map((link, idx) => {
@@ -158,8 +154,8 @@ export default function Home() {
                     key={link.label}
                     className={
                       isHero
-                        ? "col-span-2 md:col-span-2 md:row-span-2"
-                        : "col-span-1"
+                        ? "col-span-2 md:col-span-2 md:row-span-2 flex"
+                        : "col-span-1 flex"
                     }
                   >
                     <a
@@ -167,9 +163,7 @@ export default function Home() {
                       {...(link.external
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
-                      className={`group flex flex-col items-center justify-center gap-3 rounded-2xl border border-line bg-card p-4 text-center shadow-[var(--shadow)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
-                        isHero ? "h-full w-full py-8 md:py-0" : "aspect-square"
-                      }`}
+                      className="group flex flex-col items-center justify-center gap-3 rounded-2xl border border-line bg-card p-4 text-center shadow-[var(--shadow)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg w-full h-full"
                     >
                       <span
                         className={`flex shrink-0 items-center justify-center rounded-full border border-line bg-page text-gold transition-transform duration-300 group-hover:scale-110 ${
@@ -201,83 +195,6 @@ export default function Home() {
                   </li>
                 );
               })}
-          </ul>
-        </section>
-
-        {/* Brand story ---------------------------------------------- */}
-        <section aria-labelledby="story" className="border-y border-line bg-card">
-          <div className="mx-auto max-w-3xl px-5 py-14 text-center">
-            <p className="font-script text-2xl text-gold">Our Story</p>
-            <h2
-              id="story"
-              className="u-heading mt-1 text-2xl text-gold sm:text-3xl"
-            >
-              {brandStory.heading}
-            </h2>
-            <span className="u-ornament mt-3" aria-hidden="true" />
-            <div className="mt-6 space-y-4 text-base leading-relaxed text-ink-soft">
-              {brandStory.paragraphs.map((paragraph) => (
-                <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-              ))}
-            </div>
-            <dl className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
-              <div>
-                <dt className="text-sm uppercase tracking-[0.18em] text-ink-soft">
-                  Menu
-                </dt>
-                <dd className="text-xl text-gold-deep">{itemCount}+ dishes</dd>
-              </div>
-              <div>
-                <dt className="text-sm uppercase tracking-[0.18em] text-ink-soft">
-                  Sections
-                </dt>
-                <dd className="text-xl text-gold-deep">{sectionCount} cuisines</dd>
-              </div>
-              <div>
-                <dt className="text-sm uppercase tracking-[0.18em] text-ink-soft">
-                  Categories
-                </dt>
-                <dd className="text-xl text-gold-deep">{groupCount}</dd>
-              </div>
-            </dl>
-          </div>
-        </section>
-
-        {/* Occasions ------------------------------------------------ */}
-        <section aria-labelledby="occasions" className="py-14">
-          <SectionHeading
-            id="occasions"
-            overline="Celebrate with us"
-            title="Occasions We Cater"
-          />
-          <ul className="u-snap flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 sm:justify-center">
-            {occasions.map((occasion) => (
-              <li
-                key={occasion.title}
-                className="w-[75vw] max-w-[300px] shrink-0 snap-start sm:w-[280px]"
-              >
-                <article className="h-full overflow-hidden rounded-2xl border border-line bg-card shadow-[var(--shadow)]">
-                  <div className="relative aspect-[3/2]">
-                    <Image
-                      src={occasion.image}
-                      alt={occasion.alt}
-                      fill
-                      sizes="(min-width: 640px) 280px, 75vw"
-                      quality={60}
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="u-heading text-lg text-gold-deep">
-                      {occasion.title}
-                    </h3>
-                    <p className="mt-1 text-[0.95rem] leading-snug text-ink-soft">
-                      {occasion.blurb}
-                    </p>
-                  </div>
-                </article>
-              </li>
-            ))}
           </ul>
         </section>
 
@@ -315,92 +232,12 @@ export default function Home() {
             .
           </p>
         </section>
-
-        {/* Why VB --------------------------------------------------- */}
-        <section aria-labelledby="why" className="py-14">
-          <SectionHeading
-            id="why"
-            overline="Why families choose us"
-            title="Why VB Caterers"
-          />
-          <ul className="mx-auto grid max-w-5xl gap-4 px-5 sm:grid-cols-2 lg:grid-cols-3">
-            {whyCards.map((card) => (
-              <li
-                key={card.title}
-                className="rounded-2xl border border-line bg-card p-5 shadow-[var(--shadow)]"
-              >
-                <h3 className="u-heading text-lg text-gold-deep">{card.title}</h3>
-                <ul className="mt-3 space-y-2">
-                  {card.bullets.map((bullet) => (
-                    <li
-                      key={bullet}
-                      className="flex gap-2 text-[0.95rem] leading-snug text-ink-soft"
-                    >
-                      <span aria-hidden="true" className="text-gold">
-                        ·
-                      </span>
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Gallery -------------------------------------------------- */}
-        <section
-          aria-labelledby="gallery"
-          className="border-t border-line bg-card py-14"
-        >
-          <SectionHeading
-            id="gallery"
-            overline="Straight from our kitchen"
-            title="Photo Gallery"
-          />
-          <ul className="mx-auto grid max-w-5xl grid-cols-2 gap-3 px-5 sm:grid-cols-4">
-            {gallery.map((photo) => (
-              <li
-                key={photo.src}
-                className="relative aspect-square overflow-hidden rounded-xl border border-line"
-              >
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  sizes="(min-width: 640px) 25vw, 50vw"
-                  quality={65}
-                  className="object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </li>
-            ))}
-          </ul>
-          <p className="mt-5 flex flex-wrap justify-center gap-3">
-            <Link
-              href="/gallery"
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-line bg-page px-5 py-2 text-gold-deep transition-colors hover:border-gold hover:bg-olive hover:text-gold-olive"
-            >
-              <Icon name="photos" className="size-5" aria-hidden="true" />
-              View the photo gallery
-            </Link>
-            <Link
-              href="/gallery/videos"
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-line bg-page px-5 py-2 text-gold-deep transition-colors hover:border-gold hover:bg-olive hover:text-gold-olive"
-            >
-              <Icon name="video" className="size-5" aria-hidden="true" />
-              Watch our videos
-            </Link>
-          </p>
-          <p className="mx-auto mt-5 max-w-5xl px-5 text-xs text-ink-soft">
-            {imageCredits.join(" ")}
-          </p>
-        </section>
       </main>
 
       {/* Footer ------------------------------------------------------ */}
       <footer className="relative overflow-hidden bg-olive px-5 py-14 text-center text-gold-olive">
         <div className="u-inset-frame absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto max-w-xl">
+        <div className="relative mx-auto max-w-xl pt-6">
           <Image
             src="/logo.png"
             alt="VB Caterers logo"

@@ -10,7 +10,7 @@ export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-olive px-5 py-12 text-center text-gold-olive">
       <div className="u-inset-frame absolute inset-0" aria-hidden="true" />
-      <div className="relative mx-auto max-w-xl">
+      <div className="relative mx-auto max-w-xl pt-6">
         <Image
           src="/logo.png"
           alt="VB Caterers logo"

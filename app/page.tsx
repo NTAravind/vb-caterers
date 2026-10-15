@@ -375,6 +375,22 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <p className="mt-5 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/gallery"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-line bg-page px-5 py-2 text-gold-deep transition-colors hover:border-gold hover:bg-olive hover:text-gold-olive"
+            >
+              <Icon name="photos" className="size-5" aria-hidden="true" />
+              View the photo gallery
+            </Link>
+            <Link
+              href="/gallery/videos"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-line bg-page px-5 py-2 text-gold-deep transition-colors hover:border-gold hover:bg-olive hover:text-gold-olive"
+            >
+              <Icon name="video" className="size-5" aria-hidden="true" />
+              Watch our videos
+            </Link>
+          </p>
           <p className="mx-auto mt-5 max-w-5xl px-5 text-xs text-ink-soft">
             {imageCredits.join(" ")}
           </p>

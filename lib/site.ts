@@ -42,12 +42,13 @@ export const pdfUrl = "/VB-Caterers-Menu.pdf";
 /**
  * Social / media handles. Left empty on purpose — fill them in and the
  * matching button renders automatically (see `linkStack` in app/page.tsx).
+ * The photo album and video album are the in-site, Drive-backed galleries.
  */
 export const socials = {
   instagram: "#",
   facebook: "#",
-  photoAlbum: "#",
-  videoChannel: "#",
+  photoAlbum: "/gallery",
+  videoChannel: "/gallery/videos",
 } as const;
 
 export type LinkItem = {
@@ -97,14 +98,12 @@ export const linkStack: LinkItem[] = [
     sub: "Real events we catered",
     href: socials.photoAlbum,
     icon: "photos",
-    external: true,
   },
   {
     label: "Watch Our Videos",
     sub: "Live counters in action",
     href: socials.videoChannel,
     icon: "video",
-    external: true,
   },
 ];
 

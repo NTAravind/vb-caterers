@@ -16,7 +16,17 @@ export type IconName =
   | "video"
   | "search"
   | "chevron"
-  | "arrow-up";
+  | "arrow-up"
+  | "close"
+  | "play"
+  | "pause"
+  | "arrow-left"
+  | "arrow-right"
+  | "volume"
+  | "mute"
+  | "fullscreen"
+  | "exit-fullscreen"
+  | "alert";
 
 type Props = { name: IconName } & Omit<SVGProps<SVGSVGElement>, "name">;
 
@@ -153,6 +163,70 @@ export function Icon({ name, ...rest }: Props) {
       return (
         <svg {...common} {...stroke}>
           <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+      );
+    case "close":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      );
+    case "play":
+      return (
+        <svg {...common} {...filled}>
+          <path d="M8 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 8 5.5z" />
+        </svg>
+      );
+    case "pause":
+      return (
+        <svg {...common} {...filled}>
+          <rect x="6" y="5" width="4" height="14" rx="1" />
+          <rect x="14" y="5" width="4" height="14" rx="1" />
+        </svg>
+      );
+    case "arrow-left":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+      );
+    case "arrow-right":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      );
+    case "volume":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M11 5L6.5 9H3v6h3.5L11 19z" />
+          <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
+        </svg>
+      );
+    case "mute":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M11 5L6.5 9H3v6h3.5L11 19z" />
+          <path d="M16 9l5 6M21 9l-5 6" />
+        </svg>
+      );
+    case "fullscreen":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" />
+        </svg>
+      );
+    case "exit-fullscreen":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M3 8h5V3M21 8h-5V3M3 16h5v5M21 16h-5v5" />
+        </svg>
+      );
+    case "alert":
+      return (
+        <svg {...common} {...stroke}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v5M12 16h.01" />
         </svg>
       );
   }

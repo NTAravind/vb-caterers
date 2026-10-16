@@ -113,9 +113,9 @@ export default function Home() {
             sizes="(max-width: 640px) 112px, 128px"
             className="h-auto w-28 sm:w-32"
           />
-          <h1 className="u-gold-text u-heading mt-5 text-[clamp(2.6rem,13vw,5rem)] leading-[0.95]">
-            VB Caterers
-          </h1>
+      <h1 className="vb-title-gold u-heading mt-5 text-[clamp(2.6rem,13vw,5rem)] leading-[0.95]">
+  VB Caterers
+</h1>
           <p className="mt-3 font-script text-[clamp(1.5rem,6vw,2.4rem)] leading-tight text-gold-olive">
             {site.tagline}
           </p>

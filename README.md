@@ -88,6 +88,69 @@ kind that folder is for — images are listed from the photos folder, videos fro
 the videos folder. Supported types: `jpeg, png, webp, gif, avif, bmp` and
 `mp4, webm, ogg, quicktime/mov, m4v`.
 
+## Lead capture & admin panel
+
+A first-time visitor landing on the home page is redirected to `/welcome`, a
+short gate page that asks for a phone number and an email address before they
+browse the site. The pair is stored in Supabase, and the `/admin` panel lists
+those leads and exports them as CSV.
+
+- Submitting records the lead and sends the visitor on to the home page.
+- **Skip for now** just sends them on; it is remembered for the browser session
+  only, so a new session is asked again.
+- The choice lives in the `vb-lead-gate` cookie. Crawlers and link-preview bots
+  are passed straight through to the home page so search results are unaffected.
+- `/?gate=off` bypasses the gate for browsers that refuse cookies.
+
+### 1. Create the `leads` table
+
+The project is initialised with the Supabase CLI (`supabase/migrations/`). In
+the Supabase dashboard open **SQL Editor** and paste the contents of the most
+recent file in `supabase/migrations/`, or link the project and run
+`supabase db push`. The migration is idempotent.
+
+Until it has run, a submission shows an error on the form (the API answers
+`503` with `error: "table-missing"`) — visitors can still skip the gate.
+
+### 2. Environment variables
+
+Already present in your local `.env` — copy them into your host's environment
+settings for production:
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service-role key — server only, never shipped to the browser |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | The single admin login |
+| `ADMIN_SESSION_SECRET` | HMAC secret for the 7-day session cookie (32+ chars) |
+
+### 3. Admin sign-in
+
+Visit [`/admin/login`](http://localhost:3000/admin/login). Every `/admin` URL
+is redirected there by `proxy.ts`, and each API route re-checks the session
+cookie itself rather than trusting the proxy.
+
+- Failed sign-ins are rate-limited to five attempts per minute per IP.
+- Sessions are signed HMAC tokens in an http-only cookie; rotating
+  `ADMIN_SESSION_SECRET` signs everyone out.
+- Credentials are compared with constant-time digests, and no error message
+  reveals whether an address exists.
+
+### 4. CSV export
+
+From the dashboard: **Phone numbers**, **Email addresses**, or **Everything**
+(phone, email, date, time). Files are UTF-8 with a BOM and CRLF line endings,
+phone numbers are quoted as text so Excel keeps a leading `+` or zeroes, and
+times are rendered in `Asia/Kolkata` regardless of where the server runs.
+
+### 5. Rate limits & validation
+
+`POST /api/leads` allows five submissions per minute per IP. Numbers are
+stripped of spaces/dashes/parens and must contain 8–15 digits (no country-code
+guessing — `00` is normalised to `+`, everything else is kept as typed);
+emails are lowercased. The `(phone, email)` pair is unique, so re-submitting
+the same details twice stores one row.
+
 ## Architecture
 
 | Path | Purpose |
@@ -101,6 +164,15 @@ the videos folder. Supported types: `jpeg, png, webp, gif, avif, bmp` and
 | `components/gallery/GalleryPageShell.tsx` | Hero, album tabs and per-album content |
 | `app/api/gallery/media/[fileId]/route.ts` | Allow-listed media proxy (thumbnails, resized previews, Range video streaming) |
 | `components/gallery/*` | Photo masonry, video grid, lightbox, video player, states |
+| `components/site/LeadGateForm.tsx` | Lead form (client component, used by the gate) |
+| `lib/lead-gate.ts` | Gate cookie name/values shared by proxy and form |
+| `app/welcome/page.tsx` | Welcome gate — first page a new visitor sees |
+| `lib/leads.ts` | Phone/email normalisation, insert and list of `public.leads` |
+| `proxy.ts` | Sends first-time visitors to `/welcome`; guards `/admin` |
+| `lib/admin/*` | Session signing, credential checks, route guard, CSV writer |
+| `app/admin/*` | Admin pages (server components) + `components/admin/*` (client) |
+| `app/api/leads/route.ts` | Public `POST` endpoint the gate form submits to |
+| `app/api/admin/*/route.ts` | Sign-in, sign-out, list leads, CSV export |
 
 Drive metadata is cached with `use cache` / `cacheLife` (fresh within ~5
 minutes, errors retried every ~30s). The media endpoint only serves file IDs

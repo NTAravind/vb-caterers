@@ -26,7 +26,12 @@ export type IconName =
   | "mute"
   | "fullscreen"
   | "exit-fullscreen"
-  | "alert";
+  | "alert"
+  | "lock"
+  | "logout"
+  | "users"
+  | "refresh"
+  | "check";
 
 type Props = { name: IconName } & Omit<SVGProps<SVGSVGElement>, "name">;
 
@@ -227,6 +232,41 @@ export function Icon({ name, ...rest }: Props) {
         <svg {...common} {...stroke}>
           <circle cx="12" cy="12" r="9" />
           <path d="M12 8v5M12 16h.01" />
+        </svg>
+      );
+    case "lock":
+      return (
+        <svg {...common} {...stroke}>
+          <rect x="4" y="10" width="16" height="11" rx="2" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" />
+        </svg>
+      );
+    case "logout":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <path d="M16 17l5-5-5-5M21 12H9" />
+        </svg>
+      );
+    case "users":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11" />
+        </svg>
+      );
+    case "refresh":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+          <path d="M21 4v5h-5" />
+        </svg>
+      );
+    case "check":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M4 12.5l5 5L20 6.5" />
         </svg>
       );
   }

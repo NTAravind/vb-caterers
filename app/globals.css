@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   /* Brand */
@@ -17,18 +18,33 @@
     --line: #6a654a;
     --shadow: 0 10px 30px rgb(0 0 0 / 0.28);
 }
+ 
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --page: #33352a;
-    --card: #3c3e31;
-    --ink: #efe6d3;
-    --ink-soft: #c9bfa8;
-    --gold: #d9bc8b;
-    --gold-deep: #d9bc8b;
-    --line: #6a654a;
-    --shadow: 0 10px 30px rgb(0 0 0 / 0.28);
-  }
+/* shadcn/ui tokens ------------------------------------------------------
+   Every shadcn component (admin panel, lead-capture dialog) pulls its colour
+   from the same variables the site already uses, so nothing is themed twice.
+   --card / --page / --ink / --line / --gold are declared above.
+   --radius matches Tailwind's defaults so site corners are untouched. */
+:root {
+  --background: var(--page);
+  --foreground: var(--ink);
+  --card-foreground: var(--ink);
+  --popover: var(--card);
+  --popover-foreground: var(--ink);
+  --primary: var(--gold);
+  --primary-foreground: #2f3026;
+  --secondary: var(--olive);
+  --secondary-foreground: var(--ink);
+  --muted: #45473a;
+  --muted-foreground: var(--ink-soft);
+  --accent: #45473a;
+  --accent-foreground: var(--gold);
+  --destructive: #b4483c;
+  --destructive-foreground: #efe6d3;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--gold);
+  --radius: 0.5rem;
 }
 
 @theme inline {
@@ -45,6 +61,40 @@
   --font-display: var(--font-cormorant);
   --font-script: var(--font-great-vibes);
   --font-sans: var(--font-inter);
+
+  /* shadcn/ui colour + radius scale */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 * {
@@ -89,6 +139,20 @@ body {
 /* Thin gold inset border used on hero / feature blocks */
 .u-inset-frame {
   position: relative;
+}
+/* VB Caterers title — fixed gold gradient in every theme */
+.vb-title-gold {
+  background-image: linear-gradient(
+    100deg,
+    #b8956a 0%,
+    #ecd3a6 50%,
+    #b8956a 100%
+  ) !important;
+
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }
 
 .u-inset-frame::after {

@@ -1,4 +1,4 @@
--- The website menu, stored as a single JSON document.
+-- The website menu, stored as a single JSON document
 --
 -- Run this in the Supabase SQL Editor (or `supabase db push` once linked).
 -- Safe to re-run: every statement is idempotent.

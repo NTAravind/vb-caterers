@@ -12,6 +12,7 @@ import {
   mapsUrl,
 } from "@/lib/site";
 import { resolveCuisineAnchor } from "@/lib/menu";
+import { getMenu } from "@/lib/menu-store";
 
 
 export const metadata: Metadata = {
@@ -73,9 +74,10 @@ function SectionHeading({
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const menu = await getMenu();
   const cuisineLinks = cuisines.map((cuisine) => {
-    const anchor = resolveCuisineAnchor(cuisine.sectionId, cuisine.groupTitle);
+    const anchor = resolveCuisineAnchor(menu, cuisine.sectionId, cuisine.groupTitle);
     return { ...cuisine, href: anchor ? `/menu${anchor}` : "/menu" };
   });
 

@@ -4,45 +4,51 @@ import { BackToTop } from "@/components/menu/BackToTop";
 import { MenuShell } from "@/components/menu/MenuShell";
 import { Icon } from "@/components/site/icons";
 import {
+  countMenu,
   groupAnchor,
-  itemCount,
   itemCountFor,
-  menu,
-  sectionCount,
+  type Menu,
   type MenuSection,
 } from "@/lib/menu";
+import { getMenu } from "@/lib/menu-store";
 import { pdfUrl, site, whatsApp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Menu",
-  description:
-    "Explore the full VB Caterers menu — 2000+ dishes across 9 sections including beverages, starters, breakfast, main course, Asian food, mithai, desserts and ice cream.",
-  alternates: { canonical: "/menu" },
-  openGraph: {
-    title: "Menu | VB Caterers, Bengaluru",
-    description:
-      "2000+ dishes across 9 sections — the complete VB Caterers menu.",
-    url: "/menu",
-    images: [{ url: "/menu/main-course.jpg", width: 830, height: 551 }],
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  const { items, sections } = countMenu(await getMenu());
+  const description = `Explore the full VB Caterers menu — ${items} dishes across ${sections} sections including beverages, starters, breakfast, main course, Asian food, mithai, desserts and ice cream.`;
+
+  return {
+    title: "Menu",
+    description,
+    alternates: { canonical: "/menu" },
+    openGraph: {
+      title: "Menu | VB Caterers, Bengaluru",
+      description: `${items} dishes across ${sections} sections — the complete VB Caterers menu.`,
+      url: "/menu",
+      images: [{ url: "/menu/main-course.jpg", width: 830, height: 551 }],
+    },
+  };
+}
+
+const buildJsonLd = (menu: Menu) => {
+  const { items, sections } = countMenu(menu);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    name: `${site.name} Menu`,
+    url: `${site.url}/menu`,
+    inLanguage: "en-IN",
+    description: `${items} dishes across ${sections} sections, served by ${site.name} in ${site.addressLocality}.`,
+    hasMenuSection: menu.sections.map((section) => ({
+      "@type": "MenuSection",
+      name: section.title,
+      description: section.tagline,
+      numberOfItems: itemCountFor(section),
+    })),
+  };
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Menu",
-  name: `${site.name} Menu`,
-  url: `${site.url}/menu`,
-  inLanguage: "en-IN",
-  description: `${itemCount} dishes across ${sectionCount} sections, served by ${site.name} in ${site.addressLocality}.`,
-  hasMenuSection: menu.sections.map((section) => ({
-    "@type": "MenuSection",
-    name: section.title,
-    description: section.tagline,
-    numberOfItems: itemCountFor(section),
-  })),
-};
-
-function MenuHero() {
+function MenuHero({ tagline }: { tagline: string }) {
   return (
     <section className="u-inset-frame relative overflow-hidden bg-olive px-5 py-14 text-center">
       <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center">
@@ -59,7 +65,7 @@ function MenuHero() {
           Menu
         </h1>
         <p className="mt-2 font-script text-[clamp(1.5rem,6vw,2.3rem)] leading-tight text-gold-olive">
-          {menu.tagline}
+          {tagline}
         </p>
       </div>
     </section>
@@ -101,19 +107,21 @@ function SectionCover({
   );
 }
 
-export default function MenuPage() {
+export default async function MenuPage() {
+  const menu = await getMenu();
+
   return (
     <div className="flex-1">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          __html: JSON.stringify(buildJsonLd(menu)).replace(/</g, "\\u003c"),
         }}
       />
 
       <MenuShell
-        hero={<MenuHero />}
-        totalItems={itemCount}
+        hero={<MenuHero tagline={menu.tagline} />}
+        totalItems={countMenu(menu).items}
         sections={menu.sections.map(({ id, title }) => ({ id, title }))}
       >
         {menu.sections.map((section, index) => (

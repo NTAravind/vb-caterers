@@ -1,4 +1,11 @@
-import rawMenu from "@/data/menu.json";
+/**
+ * Menu types and pure helpers.
+ *
+ * The data itself is *not* imported here. It lives in `data/menu.json` and is
+ * read at runtime through lib/menu-store.ts, so the admin panel can edit it
+ * without a rebuild. Everything in this file is a pure function of a `Menu`
+ * value, which keeps it usable from both server and client components.
+ */
 
 export type MenuGroup = {
   title: string;
@@ -19,24 +26,29 @@ export type Menu = {
   sections: MenuSection[];
 };
 
-/** Single source of truth for every dish on the site. Never reworded here. */
-export const menu: Menu = rawMenu as Menu;
+export type MenuCounts = {
+  sections: number;
+  groups: number;
+  items: number;
+};
 
-export const sectionCount = menu.sections.length;
+export function countMenu(menu: Menu): MenuCounts {
+  return {
+    sections: menu.sections.length,
+    groups: menu.sections.reduce(
+      (total, section) => total + section.groups.length,
+      0,
+    ),
+    items: menu.sections.reduce(
+      (total, section) =>
+        total +
+        section.groups.reduce((inner, group) => inner + group.items.length, 0),
+      0,
+    ),
+  };
+}
 
-export const groupCount = menu.sections.reduce(
-  (total, section) => total + section.groups.length,
-  0,
-);
-
-export const itemCount = menu.sections.reduce(
-  (total, section) =>
-    total +
-    section.groups.reduce((inner, group) => inner + group.items.length, 0),
-  0,
-);
-
-export const itemCountFor = (section: MenuSection) =>
+export const itemCountFor = (section: MenuSection): number =>
   section.groups.reduce((total, group) => total + group.items.length, 0);
 
 /** Anchor for a section: `#{sectionId}` */
@@ -47,10 +59,12 @@ export const groupAnchor = (sectionId: string, groupIndex: number) =>
   `#${sectionId}-${groupIndex}`;
 
 /**
- * Resolves a cuisine to a real anchor in menu.json.
- * Returns `null` when no section/group matches, so callers can fall back to `/menu`.
+ * Resolves a cuisine to a real anchor in the menu.
+ * Returns `null` when no section/group matches, so callers can fall back to
+ * `/menu`.
  */
 export function resolveCuisineAnchor(
+  menu: Menu,
   sectionId: string,
   groupTitle?: string,
 ): string | null {

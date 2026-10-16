@@ -102,15 +102,19 @@ those leads and exports them as CSV.
   are passed straight through to the home page so search results are unaffected.
 - `/?gate=off` bypasses the gate for browsers that refuse cookies.
 
-### 1. Create the `leads` table
+### 1. Create the database tables
 
 The project is initialised with the Supabase CLI (`supabase/migrations/`). In
-the Supabase dashboard open **SQL Editor** and paste the contents of the most
-recent file in `supabase/migrations/`, or link the project and run
-`supabase db push`. The migration is idempotent.
+the Supabase dashboard open **SQL Editor** and paste the contents of each file
+in `supabase/migrations/` (the `leads` table, then the `menu` table), or link
+the project and run `supabase db push`. Every migration is idempotent.
 
-Until it has run, a submission shows an error on the form (the API answers
+Until `leads` has run, a submission shows an error on the form (the API answers
 `503` with `error: "table-missing"`) — visitors can still skip the gate.
+
+Until `menu` has run, the site keeps serving the menu bundled in
+`data/menu.json` and `/admin/menu` says it is not stored in Supabase yet; the
+first save creates the row.
 
 ### 2. Environment variables
 
@@ -151,6 +155,34 @@ guessing — `00` is normalised to `+`, everything else is kept as typed);
 emails are lowercased. The `(phone, email)` pair is unique, so re-submitting
 the same details twice stores one row.
 
+### 6. Menu editor
+
+[`/admin/menu`](http://localhost:3001/admin/menu) edits the site's menu. The
+editor covers the whole document: the menu tagline and closing line, and each
+section's title, id, tagline, image, groups and dishes. Sections are collapsed
+by default so the ~2,000 dishes are only rendered when opened, dishes are edited
+one per line, and sections and groups can be reordered, added or deleted.
+
+- **The menu is stored in Supabase** (`public.menu`, one jsonb row). The admin
+  panel loads and saves the whole document, so one row beats thousands of
+  normalised rows — and unlike the filesystem it also works on read-only,
+  serverless hosts such as Vercel.
+- **`data/menu.json` is only the seed and the fallback.** It is bundled into the
+  build, so a deployment without credentials (or one that cannot reach the
+  database) still renders the full menu. Nothing writes to it: until the first
+  save, the editor reports that the menu is not stored in Supabase yet.
+- **Saving publishes immediately.** The row is written and the menu's cache tag
+  is revalidated, so `/menu` reflects the change on the next request without a
+  rebuild.
+- **Whole-document saves are version-checked.** The editor sends the version it
+  loaded and the write only lands if it still matches, so a second tab or
+  session cannot silently clobber a newer edit — it is told to reload instead.
+- **Everything is validated before it is written** (`lib/menu-validate.ts`):
+  unique section ids, local image paths, and no empty groups. Blank lines typed
+  into a dish list are dropped, so what is stored is always canonical; a stored
+  menu that somehow fails validation falls back to the seed rather than breaking
+  the page.
+
 ## Architecture
 
 | Path | Purpose |
@@ -172,7 +204,12 @@ the same details twice stores one row.
 | `lib/admin/*` | Session signing, credential checks, route guard, CSV writer |
 | `app/admin/*` | Admin pages (server components) + `components/admin/*` (client) |
 | `app/api/leads/route.ts` | Public `POST` endpoint the gate form submits to |
-| `app/api/admin/*/route.ts` | Sign-in, sign-out, list leads, CSV export |
+| `app/api/admin/*/route.ts` | Sign-in, sign-out, list leads, CSV export, menu read/save |
+| `data/menu.json` | The menu's seed and offline fallback (bundled; never written) |
+| `lib/menu.ts` | Menu types and pure helpers (counts, anchors, cuisine links) |
+| `lib/menu-store.ts` | Supabase menu read (`use cache` + tag) and version-checked write |
+| `lib/menu-validate.ts` | Validation/normalisation applied before a menu is stored |
+| `components/admin/MenuEditor.tsx` | Menu editor (client component) |
 
 Drive metadata is cached with `use cache` / `cacheLife` (fresh within ~5
 minutes, errors retried every ~30s). The media endpoint only serves file IDs
@@ -198,6 +235,9 @@ page load, without rebuilding or redeploying.
   visitor's connection and on Drive supporting partial downloads.
 - **Pagination cap.** Up to 600 files are listed per refresh (configurable via
   `MAX_FILES` in `lib/gallery/config.ts`).
+- **The menu PDF is not regenerated.** `/admin/menu` publishes the site menu
+  straight to Supabase, but the downloadable `public/VB-Caterers-Menu.pdf` is a
+  static file and has to be replaced by hand when the menu changes.
 
 ## Learn More
 

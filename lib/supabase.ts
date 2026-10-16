@@ -4,8 +4,8 @@
  * NEVER import this from a client component — the service role key bypasses
  * Row Level Security. Every call site is a route handler under app/api/.
  *
- * Leads live in the `public.leads` table; see
- * supabase/migrations/*_create_leads.sql for the schema.
+ * The tables are `public.leads` (the welcome gate) and `public.menu` (the site
+ * menu, one jsonb row); see supabase/migrations/ for the schemas.
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";

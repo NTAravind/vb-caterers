@@ -31,7 +31,11 @@ export type IconName =
   | "logout"
   | "users"
   | "refresh"
-  | "check";
+  | "check"
+  | "plus"
+  | "trash"
+  | "arrow-down"
+  | "save";
 
 type Props = { name: IconName } & Omit<SVGProps<SVGSVGElement>, "name">;
 
@@ -267,6 +271,33 @@ export function Icon({ name, ...rest }: Props) {
       return (
         <svg {...common} {...stroke}>
           <path d="M4 12.5l5 5L20 6.5" />
+        </svg>
+      );
+    case "plus":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      );
+    case "trash":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M4 7h16M10 11v6M14 11v6" />
+          <path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" />
+          <path d="M9 7V4.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V7" />
+        </svg>
+      );
+    case "arrow-down":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M12 5v14M5 12l7 7 7-7" />
+        </svg>
+      );
+    case "save":
+      return (
+        <svg {...common} {...stroke}>
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+          <path d="M17 21v-8H7v8M7 3v5h8" />
         </svg>
       );
   }

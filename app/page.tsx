@@ -138,7 +138,7 @@ export default async function Home() {
       </header>
 
       <main id="main" className="flex-1">
-        {/* Link stack  */}
+        {/* Link stack */}
         <section
           aria-labelledby="quick-links"
           className="mx-auto w-full max-w-4xl px-5 py-12 sm:py-16"

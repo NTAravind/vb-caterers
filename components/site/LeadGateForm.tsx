@@ -6,7 +6,6 @@ import {
   LEAD_GATE_COOKIE,
   LEAD_GATE_DONE,
   LEAD_GATE_DONE_MAX_AGE_SECONDS,
-  LEAD_GATE_SKIP,
 } from "@/lib/lead-gate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,10 +14,9 @@ import { Label } from "@/components/ui/label";
 /**
  * The form on the welcome gate.
  *
- * A visitor either hands over a phone number and an email address, or skips.
- * Either way the choice is written to the gate cookie and they are sent on to
- * the main site. If the details are submitted the row is saved first — a
- * visitor is never told "thank you" for a lead that did not reach Supabase.
+ * A visitor hands over a phone number and an email address, and the details are
+ * saved before they are sent on to the main site — a visitor is never told
+ * "thank you" for a lead that did not reach Supabase.
  */
 
 type Status = "idle" | "submitting" | "done" | "error";
@@ -40,10 +38,10 @@ export function LeadGateForm() {
    * Browsers with cookies switched off would otherwise bounce the visitor
    * straight back to this page, so the caller falls back to an escape hatch.
    */
-  function rememberGate(value: string, persist: boolean): boolean {
+  function rememberGate(value: string): boolean {
     try {
       const secure = window.location.protocol === "https:" ? "; Secure" : "";
-      const maxAge = persist ? `; Max-Age=${LEAD_GATE_DONE_MAX_AGE_SECONDS}` : "";
+      const maxAge = `; Max-Age=${LEAD_GATE_DONE_MAX_AGE_SECONDS}`;
       document.cookie = `${LEAD_GATE_COOKIE}=${value}; Path=/; SameSite=Lax${maxAge}${secure}`;
       return document.cookie.includes(`${LEAD_GATE_COOKIE}=${value}`);
     } catch {
@@ -52,10 +50,10 @@ export function LeadGateForm() {
   }
 
   /** Hands the visitor to the main site, guarding the cookie-less edge case. */
-  function enterSite(value: string, persist: boolean) {
+  function enterSite(value: string) {
     setStatus("done");
     // Cookies unavailable: let this one request past the gate.
-    router.push(rememberGate(value, persist) ? "/" : "/?gate=off");
+    router.push(rememberGate(value) ? "/" : "/?gate=off");
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -82,7 +80,7 @@ export function LeadGateForm() {
       }
 
       // Remembered for a year, and only once the server has confirmed the save.
-      enterSite(LEAD_GATE_DONE, true);
+      enterSite(LEAD_GATE_DONE);
     } catch {
       setStatus("error");
       setMessage("Network problem — please check your connection and try again.");
@@ -135,20 +133,10 @@ export function LeadGateForm() {
 
       <Button type="submit" size="lg" disabled={status !== "idle"}>
         {status === "submitting"
-          ? "Sending…"
+          ? "Submitting…"
           : status === "done"
             ? "Taking you to the site…"
-            : "Send my details"}
-      </Button>
-
-      <Button
-        type="button"
-        variant="ghost"
-        className="-mt-1 text-ink-soft hover:text-ink"
-        disabled={status !== "idle"}
-        onClick={() => enterSite(LEAD_GATE_SKIP, false)}
-      >
-     Go to Site
+            : "Submit & Go to Site"}
       </Button>
     </form>
   );

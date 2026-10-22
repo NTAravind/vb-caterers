@@ -16,7 +16,11 @@ export const LEAD_GATE_COOKIE = "vb-lead-gate";
 /** The visitor handed over their details — remembered for a year. */
 export const LEAD_GATE_DONE = "done";
 
-/** The visitor chose "Skip for now" — remembered for this browser session only. */
+/**
+ * Legacy value: the gate used to offer a "Go to Site" button that skipped the
+ * form. The button is gone, but cookies already set with this value still let
+ * those visitors through.
+ */
 export const LEAD_GATE_SKIP = "skip";
 
 export const LEAD_GATE_DONE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;

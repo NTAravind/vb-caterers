@@ -2,8 +2,8 @@
  * Proxy (the Next.js 16 successor to middleware). It does two jobs:
  *
  *  1. The welcome gate — a first-time visitor landing on `/` is sent to
- *     `/welcome` to leave a phone number and an email address (or skip) before
- *     they browse the site.
+ *     `/welcome` to leave a phone number and an email address before they
+ *     browse the site.
  *  2. The admin guard — `/admin/*` requires a signed session cookie.
  *
  * Scope is pages only. The API routes under `/api/admin/*` verify the session

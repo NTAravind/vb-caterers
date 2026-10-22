@@ -96,8 +96,6 @@ browse the site. The pair is stored in Supabase, and the `/admin` panel lists
 those leads and exports them as CSV.
 
 - Submitting records the lead and sends the visitor on to the home page.
-- **Skip for now** just sends them on; it is remembered for the browser session
-  only, so a new session is asked again.
 - The choice lives in the `vb-lead-gate` cookie. Crawlers and link-preview bots
   are passed straight through to the home page so search results are unaffected.
 - `/?gate=off` bypasses the gate for browsers that refuse cookies.
@@ -110,7 +108,7 @@ in `supabase/migrations/` (the `leads` table, then the `menu` table), or link
 the project and run `supabase db push`. Every migration is idempotent.
 
 Until `leads` has run, a submission shows an error on the form (the API answers
-`503` with `error: "table-missing"`) — visitors can still skip the gate.
+`503` with `error: "table-missing"`) and the visitor stays on the gate.
 
 Until `menu` has run, the site keeps serving the menu bundled in
 `data/menu.json` and `/admin/menu` says it is not stored in Supabase yet; the

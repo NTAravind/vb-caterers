@@ -94,6 +94,9 @@ export function normalizePhone(raw: string): string | null {
   const digits = value.replace(/\D/g, "");
   // E.164 allows at most 15 digits; require a sane minimum too.
   if (digits.length < 8 || digits.length > 15) return null;
+  // Welcome form visitors commonly enter an Indian 10-digit mobile number.
+  // Store it in the same canonical format as an explicit +91 number.
+  if (!value.startsWith("+") && digits.length === 10) return `+91${digits}`;
   return value.startsWith("+") ? `+${digits}` : digits;
 }
 
